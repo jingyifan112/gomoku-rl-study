@@ -1,14 +1,10 @@
-CC = cc
-CFLAGS = -O3 -Wall -W -ffast-math
-LDFLAGS = -lm
+all: clean train play
 
-all: train play
+train:
+	cc train.c common.h -o train -O3 -Wall -W -ffast-math -lm
 
-train: train.c common.h
-	$(CC) train.c -o train $(CFLAGS) $(LDFLAGS)
-
-play: play.c common.h
-	$(CC) play.c -o play $(CFLAGS) $(LDFLAGS)
+play:
+	cc play.c common.h -o play -O3 -Wall -W -ffast-math -lm
 
 clean:
-	rm -f train play gomoku_nn.bin
+	rm -f train play 2>/dev/null
