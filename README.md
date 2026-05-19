@@ -1,8 +1,6 @@
 # gomoku-rl-study
 
-This repo is an experimental extension of a tic-tac-toe reinforcement learning project into a 15x15 Gomoku-style game.
-
-The goal is to modify the original small reinforcement learning pipeline so it can run on a larger board with a five-in-a-row win condition.
+This repo keeps the original common.h / train.c / play.c / Makefile structure from Arthur Chiao's tic-tac-toe reinforcement learning example, and modifies it into a 15x15 Gomoku experiment.
 
 ## Main changes
 
