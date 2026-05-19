@@ -1,0 +1,3 @@
+Interactive play mode was tested with ./play.
+
+The program loaded gomoku_nn.bin successfully, displayed the 15x15 board, accepted human input at position 112, and the computer responded with a neural-network-selected move.

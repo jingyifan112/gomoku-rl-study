@@ -1,0 +1,21 @@
+cc train.c -o train -O3 -Wall -W -ffast-math -lm
+In file included from train.c:1:
+./common.h:238:13: warning: unused function 'display_board' [-Wunused-function]
+  238 | static void display_board(GameState *state) {
+      |             ^~~~~~~~~~~~~
+./common.h:280:12: warning: unused function 'load_neural_network' [-Wunused-function]
+  280 | static int load_neural_network(NeuralNetwork *nn, const char *filename) {
+      |            ^~~~~~~~~~~~~~~~~~~
+2 warnings generated.
+cc play.c -o play -O3 -Wall -W -ffast-math -lm
+In file included from play.c:1:
+./common.h:48:14: warning: unused function 'relu_derivative' [-Wunused-function]
+   48 | static float relu_derivative(float x) {
+      |              ^~~~~~~~~~~~~~~
+./common.h:164:12: warning: unused function 'get_random_move' [-Wunused-function]
+  164 | static int get_random_move(GameState *state) {
+      |            ^~~~~~~~~~~~~~~
+./common.h:254:12: warning: unused function 'save_neural_network' [-Wunused-function]
+  254 | static int save_neural_network(NeuralNetwork *nn, const char *filename) {
+      |            ^~~~~~~~~~~~~~~~~~~
+3 warnings generated.
