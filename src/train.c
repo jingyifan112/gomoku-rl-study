@@ -1,217 +1,143 @@
 #include "common.h"
 
-/* Initialize a neural network with random weights, we should
- * use something like He weights since we use RELU, but we don't
- * care as this is a trivial example. */
-#define RANDOM_WEIGHT() (((float)rand() / RAND_MAX) - 0.5f)
-void init_neural_network(NeuralNetwork *nn) {
-    // Initialize weights with random values between -0.5 and 0.5
-    for (int i = 0; i < NN_INPUT_SIZE * NN_HIDDEN_SIZE; i++)
+#define LEARNING_RATE 0.01f
+#define RANDOM_WEIGHT() ((((float)rand() / RAND_MAX) - 0.5f) * 0.1f)
+
+/* For 15x15 Gomoku, replaying every move in a full game is much slower than
+ * tic-tac-toe. This keeps the experiment practical while preserving the
+ * original learning structure. */
+#define MAX_REPLAY_MOVES 40
+
+static void init_neural_network(NeuralNetwork *nn) {
+    for (int i = 0; i < NN_INPUT_SIZE * NN_HIDDEN_SIZE; i++) {
         nn->weights_ih[i] = RANDOM_WEIGHT();
+    }
 
-    for (int i = 0; i < NN_HIDDEN_SIZE * NN_OUTPUT_SIZE; i++)
+    for (int i = 0; i < NN_HIDDEN_SIZE * NN_OUTPUT_SIZE; i++) {
         nn->weights_ho[i] = RANDOM_WEIGHT();
+    }
 
-    for (int i = 0; i < NN_HIDDEN_SIZE; i++)
+    for (int i = 0; i < NN_HIDDEN_SIZE; i++) {
         nn->biases_h[i] = RANDOM_WEIGHT();
+    }
 
-    for (int i = 0; i < NN_OUTPUT_SIZE; i++)
+    for (int i = 0; i < NN_OUTPUT_SIZE; i++) {
         nn->biases_o[i] = RANDOM_WEIGHT();
+    }
 }
 
-/* Derivative of ReLU activation function */
-float relu_derivative(float x) {
-    return x > 0 ? 1.0f : 0.0f;
-}
-
-/* Backpropagation function.
- * The only difference here from vanilla backprop is that we have
- * a 'reward_scaling' argument that makes the output error more/less
- * dramatic, so that we can adjust the weights proportionally to the
- * reward we want to provide. */
-void backprop(NeuralNetwork *nn, float *target_probs, float learning_rate, float reward_scaling) {
+static void backprop(NeuralNetwork *nn, float *target_probs, float learning_rate, float reward_scaling) {
     float output_deltas[NN_OUTPUT_SIZE];
     float hidden_deltas[NN_HIDDEN_SIZE];
 
-    /* === STEP 1: Compute deltas === */
-
-    /* Calculate output layer deltas:
-     * Note what's going on here: we are technically using softmax
-     * as output function and cross entropy as loss, but we never use
-     * cross entropy in practice since we check the progresses in terms
-     * of winning the game.
-     *
-     * Still calculating the deltas in the output as:
-     *
-     *      output[i] - target[i]
-     *
-     * Is exactly what happens if you derivate the deltas with
-     * softmax and cross entropy.
-     *
-     * LEARNING OPPORTUNITY: This is a well established and fundamental
-     * result in neural networks, you may want to read more about it. */
     for (int i = 0; i < NN_OUTPUT_SIZE; i++) {
-        output_deltas[i] =
-            (nn->outputs[i] - target_probs[i]) * fabsf(reward_scaling);
+        output_deltas[i] = (nn->outputs[i] - target_probs[i]) * fabsf(reward_scaling);
     }
 
-    // Backpropagate error to hidden layer.
     for (int i = 0; i < NN_HIDDEN_SIZE; i++) {
-        float error = 0;
+        float error = 0.0f;
+
         for (int j = 0; j < NN_OUTPUT_SIZE; j++) {
             error += output_deltas[j] * nn->weights_ho[i * NN_OUTPUT_SIZE + j];
         }
+
         hidden_deltas[i] = error * relu_derivative(nn->hidden[i]);
     }
 
-    /* === STEP 2: Weights updating === */
-
-    // Output layer weights and biases.
     for (int i = 0; i < NN_HIDDEN_SIZE; i++) {
         for (int j = 0; j < NN_OUTPUT_SIZE; j++) {
-            nn->weights_ho[i * NN_OUTPUT_SIZE + j] -=
-                learning_rate * output_deltas[j] * nn->hidden[i];
+            nn->weights_ho[i * NN_OUTPUT_SIZE + j] -= learning_rate * output_deltas[j] * nn->hidden[i];
         }
     }
+
     for (int j = 0; j < NN_OUTPUT_SIZE; j++) {
         nn->biases_o[j] -= learning_rate * output_deltas[j];
     }
 
-    // Hidden layer weights and biases.
     for (int i = 0; i < NN_INPUT_SIZE; i++) {
         for (int j = 0; j < NN_HIDDEN_SIZE; j++) {
-            nn->weights_ih[i * NN_HIDDEN_SIZE + j] -=
-                learning_rate * hidden_deltas[j] * nn->inputs[i];
+            nn->weights_ih[i * NN_HIDDEN_SIZE + j] -= learning_rate * hidden_deltas[j] * nn->inputs[i];
         }
     }
+
     for (int j = 0; j < NN_HIDDEN_SIZE; j++) {
         nn->biases_h[j] -= learning_rate * hidden_deltas[j];
     }
 }
 
-/* Train the neural network based on game outcome.
- *
- * The move_history is just an integer array with the index of all the
- * moves. This function is designed so that you can specify if the
- * game was started by the move by the NN or human, but actually the
- * code always let the human move first. */
-void learn_from_game(NeuralNetwork *nn, int *move_history, int num_moves, int nn_moves_even, char winner) {
-    // Determine reward based on game outcome
+static void learn_from_game(NeuralNetwork *nn, int *move_history, int num_moves, int nn_moves_even, char winner) {
     float reward;
     char nn_symbol = nn_moves_even ? 'O' : 'X';
 
     if (winner == 'T') {
-        reward = 0.3f;  // Small reward for draw
+        reward = 0.3f;
     } else if (winner == nn_symbol) {
-        reward = 1.0f;  // Large reward for win
+        reward = 1.0f;
     } else {
-        reward = -2.0f; // Negative reward for loss
+        reward = -2.0f;
     }
 
     GameState state;
     float target_probs[NN_OUTPUT_SIZE];
 
-    // Process each move the neural network made.
     for (int move_idx = 0; move_idx < num_moves; move_idx++) {
-        // Skip if this wasn't a move by the neural network.
-        if ((nn_moves_even && move_idx % 2 != 1) ||
-            (!nn_moves_even && move_idx % 2 != 0))
-        {
+        if ((nn_moves_even && move_idx % 2 != 1) || (!nn_moves_even && move_idx % 2 != 0)) {
             continue;
         }
 
-        // Recreate board state BEFORE this move was made.
+        if (num_moves - move_idx > MAX_REPLAY_MOVES) {
+            continue;
+        }
+
         init_game(&state);
+
         for (int i = 0; i < move_idx; i++) {
             char symbol = (i % 2 == 0) ? 'X' : 'O';
             state.board[move_history[i]] = symbol;
         }
 
-        // Convert board to inputs and do forward pass.
         float inputs[NN_INPUT_SIZE];
+
         board_to_inputs(&state, inputs);
         forward_pass(nn, inputs);
 
-        /* The move that was actually made by the NN, that is
-         * the one we want to reward (positively or negatively). */
-        int move = move_history[move_idx];
+        for (int i = 0; i < NN_OUTPUT_SIZE; i++) {
+            target_probs[i] = 0.0f;
+        }
 
-        /* Here we can't really implement temporal difference in the strict
-         * reinforcement learning sense, since we don't have an easy way to
-         * evaluate if the current situation is better or worse than the
-         * previous state in the game.
-         *
-         * However "time related" we do something that is very effective in
-         * this case: we scale the reward according to the move time, so that
-         * later moves are more impacted (the game is less open to different
-         * solutions as we go forward).
-         *
-         * We give a fixed 0.5 importance to all the moves plus
-         * a 0.5 that depends on the move position.
-         *
-         * NOTE: this makes A LOT of difference. Experiment with different
-         * values.
-         *
-         * LEARNING OPPORTUNITY: Temporal Difference in Reinforcement Learning
-         * is a very important result, that was worth the Turing Award in
-         * 2024 to Sutton and Barto. You may want to read about it. */
-        float move_importance = 0.5f + 0.5f * (float)move_idx/(float)num_moves;
+        int move = move_history[move_idx];
+        float move_importance = 0.5f + 0.5f * (float)move_idx / (float)num_moves;
         float scaled_reward = reward * move_importance;
 
-        /* Create target probability distribution:
-         * let's start with the logits all set to 0. */
-        for (int i = 0; i < NN_OUTPUT_SIZE; i++)
-            target_probs[i] = 0;
-
-        /* Set the target for the chosen move based on reward: */
         if (scaled_reward >= 0) {
-            /* For positive reward, set probability of the chosen move to
-             * 1, with all the rest set to 0. */
-            target_probs[move] = 1;
+            target_probs[move] = 1.0f;
         } else {
-            /* For negative reward, distribute probability to OTHER
-             * valid moves, which is conceptually the same as discouraging
-             * the move that we want to discourage. */
-            int valid_moves_left = 9-move_idx-1;
+            int valid_moves_left = 0;
+
+            for (int i = 0; i < BOARD_CELLS; i++) {
+                if (state.board[i] == '.' && i != move) {
+                    valid_moves_left++;
+                }
+            }
+
+            if (valid_moves_left == 0) {
+                continue;
+            }
+
             float other_prob = 1.0f / valid_moves_left;
-            for (int i = 0; i < 9; i++) {
+
+            for (int i = 0; i < BOARD_CELLS; i++) {
                 if (state.board[i] == '.' && i != move) {
                     target_probs[i] = other_prob;
                 }
             }
         }
 
-        /* Call the generic backpropagation function, using
-         * our target logits as target. */
         backprop(nn, target_probs, LEARNING_RATE, scaled_reward);
     }
 }
 
-/* Get a random valid move, this is used for training
- * against a random opponent. Note: this function will loop forever
- * if the board is full, but here we want simple code. */
-int get_random_move(GameState *state) {
-    while(1) {
-        int move = rand() % 9;
-        if (state->board[move] != '.') continue;
-        return move;
-    }
-}
-
-/* Play a game against random moves and learn from it.
- *
- * This is a very simple Montecarlo Method applied to reinforcement learning:
- *
- * 1. We play a complete random game (episode).
- * 2. We determine the reward based on the outcome of the game.
- * 3. We update the neural network in order to maximize future rewards.
- *
- * LEARNING OPPORTUNITY: while the code uses some Montecarlo-alike
- * technique, important results were recently obtained using
- * Montecarlo Tree Search (MCTS), where a tree structure repesents
- * potential future game states that are explored according to
- * some selection: you may want to learn about it. */
-char play_random_game(NeuralNetwork *nn, int *move_history) {
+static char play_random_game(NeuralNetwork *nn, int *move_history) {
     GameState state;
     char winner = 0;
     int num_moves = 0;
@@ -221,102 +147,91 @@ char play_random_game(NeuralNetwork *nn, int *move_history) {
     while (!check_game_over(&state, &winner)) {
         int move;
 
-        if (state.current_player == 0) {  // Random player's turn (X)
+        if (state.current_player == 0) {
             move = get_random_move(&state);
-        } else {  // Neural network's turn (O)
+        } else {
             move = get_computer_move(&state, nn, 0);
         }
 
-        /* Make the move and store it: we need the moves sequence
-         * during the learning stage. */
+        if (move < 0) {
+            winner = 'T';
+            break;
+        }
+
         char symbol = (state.current_player == 0) ? 'X' : 'O';
+
         state.board[move] = symbol;
         move_history[num_moves++] = move;
 
-        // Switch player.
         state.current_player = !state.current_player;
     }
 
-    // Learn from this game - neural network is 'O' (even-numbered moves).
     learn_from_game(nn, move_history, num_moves, 1, winner);
+
     return winner;
 }
 
-/* Train the neural network against random moves. */
-void train_against_random(NeuralNetwork *nn, int num_games) {
-    int move_history[9];
-    int wins = 0, losses = 0, ties = 0;
+static void train_against_random(NeuralNetwork *nn, int num_games) {
+    int move_history[BOARD_CELLS];
+    int wins = 0;
+    int losses = 0;
+    int ties = 0;
 
-    printf("Training neural network against %d random games...\n", num_games);
+    printf("Training Gomoku neural network against %d random games...\n", num_games);
 
-    int played_games = 0;
+    int interval = 100;
+    if (num_games >= 1000) {
+        interval = 500;
+    }
+
     for (int i = 0; i < num_games; i++) {
         char winner = play_random_game(nn, move_history);
-        played_games++;
 
-        // Accumulate statistics that are provided to the user (it's fun).
         if (winner == 'O') {
-            wins++; // Neural network won.
+            wins++;
         } else if (winner == 'X') {
-            losses++; // Random player won.
+            losses++;
         } else {
-            ties++; // Tie.
+            ties++;
         }
 
-        // Show progress every many games to avoid flooding the stdout.
-        if ((i + 1) % 10000 == 0) {
-            printf("Games: %d, Wins: %d (%.1f%%), "
-                   "Losses: %d (%.1f%%), Ties: %d (%.1f%%)\n",
-                  i + 1, wins, (float)wins * 100 / played_games,
-                  losses, (float)losses * 100 / played_games,
-                  ties, (float)ties * 100 / played_games);
-            played_games = 0;
+        if ((i + 1) % interval == 0) {
+            printf("Games: %d, Wins: %d, Losses: %d, Ties: %d\n",
+                   i + 1, wins, losses, ties);
             wins = 0;
             losses = 0;
             ties = 0;
         }
     }
-    printf("\nTraining complete!\n");
-}
 
-/* Save neural network parameters to a file */
-void save_neural_network(NeuralNetwork *nn, const char *filename) {
-    FILE *file = fopen(filename, "wb");
-    if (file == NULL) {
-        printf("Error opening file for writing: %s\n", filename);
-        return;
-    }
-    
-    // Write weights and biases
-    fwrite(nn->weights_ih, sizeof(float), NN_INPUT_SIZE * NN_HIDDEN_SIZE, file);
-    fwrite(nn->weights_ho, sizeof(float), NN_HIDDEN_SIZE * NN_OUTPUT_SIZE, file);
-    fwrite(nn->biases_h, sizeof(float), NN_HIDDEN_SIZE, file);
-    fwrite(nn->biases_o, sizeof(float), NN_OUTPUT_SIZE, file);
-    
-    fclose(file);
-    printf("Neural network saved to %s\n", filename);
+    printf("Training complete!\n");
 }
 
 int main(int argc, char **argv) {
-    int random_games = 150000; // Fast and enough to play in a decent way.
-    const char *output_file = "ttt_nn.bin";
-    
-    if (argc > 1) random_games = atoi(argv[1]);
-    if (argc > 2) output_file = argv[2];
-    
-    srand(time(NULL));
+    int random_games = 200;
+    const char *output_file = MODEL_FILE;
 
-    // Initialize neural network.
+    if (argc > 1) {
+        random_games = atoi(argv[1]);
+    }
+
+    if (argc > 2) {
+        output_file = argv[2];
+    }
+
+    srand((unsigned)time(NULL));
+
     NeuralNetwork nn;
+
     init_neural_network(&nn);
 
     printf("Training neural network with %d games\n", random_games);
-    
-    // Train against random moves.
-    if (random_games > 0) train_against_random(&nn, random_games);
 
-    // Save the trained neural network
+    if (random_games > 0) {
+        train_against_random(&nn, random_games);
+    }
+
     save_neural_network(&nn, output_file);
-    
+
     return 0;
 }
