@@ -31,11 +31,18 @@ With this version, I ran:
 
 ```bash
 ./train 1000
+```
 
-The training log showed:￼Total games counted: 1000
+The training log showed:
+
+```text
+Total games counted: 1000
 Wins: 1000 (100.0%)
 Losses: 0 (0.0%)
-Ties: 0 (0.0%)This result is against a random player, so I treat it as a sanity check for the modified training/play pipeline rather than a full evaluation of Gomoku strength.￼
+Ties: 0 (0.0%)
+```
+
+This result is against a random player, so I treat it as a sanity check for the modified training/play pipeline rather than a full evaluation of Gomoku strength.
 
 ## Files
 
