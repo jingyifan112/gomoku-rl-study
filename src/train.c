@@ -6,7 +6,7 @@
 /* For 15x15 Gomoku, replaying every move in a full game is much slower than
  * tic-tac-toe. This keeps the experiment practical while preserving the
  * original learning structure. */
-#define MAX_REPLAY_MOVES 40
+#define MAX_REPLAY_MOVES 80
 
 static void init_neural_network(NeuralNetwork *nn) {
     for (int i = 0; i < NN_INPUT_SIZE * NN_HIDDEN_SIZE; i++) {

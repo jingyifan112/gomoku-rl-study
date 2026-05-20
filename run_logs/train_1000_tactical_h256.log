@@ -1,0 +1,6 @@
+Training neural network with 1000 games
+Training Gomoku neural network against 1000 random games...
+Games: 500, Wins: 500, Losses: 0, Ties: 0
+Games: 1000, Wins: 500, Losses: 0, Ties: 0
+Training complete!
+Neural network saved to gomoku_nn.bin
