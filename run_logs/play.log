@@ -1,3 +1,5 @@
 Interactive play mode was tested with ./play.
 
-The program loaded gomoku_nn.bin successfully, displayed the 15x15 board, accepted human input at position 112, and the computer responded with a neural-network-selected move at position 11 with probability 93.52%.
+The program loaded gomoku_nn.bin successfully, displayed the 15x15 board, accepted human input at position 112, and the computer responded with a neural-network-selected move at position 67 with probability 93.27%.
+
+This version uses pure neural network move selection: it chooses the legal board position with the highest output probability.
