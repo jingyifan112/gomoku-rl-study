@@ -16,33 +16,18 @@ Compared with the original tic-tac-toe version:
 
 ## Training improvement
 
-After getting the basic 15x15 Gomoku version running, I also tried a small improvement to increase the win rate against the random opponent.
+After removing the rule-based tactical check, I kept move selection based only on the neural network output.
 
-The main updates were:
+To improve the pure neural network version, I adjusted the training setup:
 
 - Increased `NN_HIDDEN_SIZE` from 100 to 256.
 - Increased `MAX_REPLAY_MOVES` from 40 to 80.
-- Added a simple tactical move check before using the neural network output:
-  - if `O` can win immediately, choose that move;
-  - otherwise, if `X` can win immediately, block that move;
-  - otherwise, use the neural network's best legal move.
+- Increased training from 1000 games to 5000 games.
 
-With this version, I ran:
+With `./train 5000`, the model reached a 99.8% win rate against the random player in the training log.
 
-```bash
-./train 1000
-```
-
-The training log showed:
-
-```text
-Total games counted: 1000
-Wins: 1000 (100.0%)
-Losses: 0 (0.0%)
-Ties: 0 (0.0%)
-```
-
-This result is against a random player, so I treat it as a sanity check for the modified training/play pipeline rather than a full evaluation of Gomoku strength.
+This result is still against a random opponent, so I treat it as a training sanity check rather than a full evaluation of Gomoku strength.
+After getting the basic 15x15 Gomoku version running, I also tried a small improvement to increase the win rate against the random opponent.
 
 ## Files
 
