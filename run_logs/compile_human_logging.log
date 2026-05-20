@@ -1,0 +1,15 @@
+cc play.c -o play -O3 -Wall -W -ffast-math -lm
+In file included from play.c:1:
+./common.h:57:14: warning: unused function 'relu_derivative' [-Wunused-function]
+   57 | static float relu_derivative(float x) {
+      |              ^~~~~~~~~~~~~~~
+./common.h:94:13: warning: unused function 'board_to_inputs' [-Wunused-function]
+   94 | static void board_to_inputs(GameState *state, float *inputs) {
+      |             ^~~~~~~~~~~~~~~
+./common.h:210:12: warning: unused function 'get_random_move' [-Wunused-function]
+  210 | static int get_random_move(GameState *state) {
+      |            ^~~~~~~~~~~~~~~
+./common.h:280:12: warning: unused function 'save_neural_network' [-Wunused-function]
+  280 | static int save_neural_network(NeuralNetwork *nn, const char *filename) {
+      |            ^~~~~~~~~~~~~~~~~~~
+4 warnings generated.

@@ -1,5 +1,60 @@
 #include "common.h"
 
+typedef struct {
+    char board_before[BOARD_CELLS + 1];
+    char player;
+    char source[16];
+    int move;
+} MoveRecord;
+
+static void copy_board_string(GameState *state, char *dest) {
+    for (int i = 0; i < BOARD_CELLS; i++) {
+        dest[i] = state->board[i];
+    }
+    dest[BOARD_CELLS] = '\0';
+}
+
+static void append_game_log(MoveRecord *records, int num_records, char winner) {
+    const char *log_path = "../run_logs/human_games.csv";
+
+    int need_header = 0;
+    FILE *check = fopen(log_path, "r");
+
+    if (check == NULL) {
+        need_header = 1;
+    } else {
+        fclose(check);
+    }
+
+    FILE *file = fopen(log_path, "a");
+
+    if (file == NULL) {
+        printf("Warning: could not open %s for writing.\n", log_path);
+        return;
+    }
+
+    if (need_header) {
+        fprintf(file, "game_id,move_index,player,source,move,winner,board_before\n");
+    }
+
+    long game_id = (long)time(NULL);
+
+    for (int i = 0; i < num_records; i++) {
+        fprintf(file, "%ld,%d,%c,%s,%d,%c,%s\n",
+                game_id,
+                i,
+                records[i].player,
+                records[i].source,
+                records[i].move,
+                winner,
+                records[i].board_before);
+    }
+
+    fclose(file);
+
+    printf("Saved game data to %s\n", log_path);
+}
+
 static int read_player_move(GameState *state) {
     int move;
 
@@ -32,19 +87,33 @@ static int read_player_move(GameState *state) {
 static void play_game(NeuralNetwork *nn) {
     GameState state;
     char winner = 0;
+    MoveRecord records[BOARD_CELLS];
+    int num_records = 0;
 
     init_game(&state);
 
     printf("Welcome to 15x15 Gomoku! You are X, the computer is O.\n");
     printf("Enter positions as numbers from 0 to %d.\n", BOARD_CELLS - 1);
+    printf("This game will be logged to run_logs/human_games.csv.\n");
 
     display_board(&state);
 
     while (!check_game_over(&state, &winner)) {
         int move;
+        char symbol = (state.current_player == 0) ? 'X' : 'O';
+
+        if (num_records < BOARD_CELLS) {
+            copy_board_string(&state, records[num_records].board_before);
+            records[num_records].player = symbol;
+        }
 
         if (state.current_player == 0) {
             move = read_player_move(&state);
+
+            if (num_records < BOARD_CELLS) {
+                snprintf(records[num_records].source, sizeof(records[num_records].source), "human");
+                records[num_records].move = move;
+            }
         } else {
             printf("Computer's move:\n");
             move = get_computer_move(&state, nn, 1);
@@ -55,11 +124,18 @@ static void play_game(NeuralNetwork *nn) {
             }
 
             printf("Computer placed O at position %d\n", move);
+
+            if (num_records < BOARD_CELLS) {
+                snprintf(records[num_records].source, sizeof(records[num_records].source), "computer");
+                records[num_records].move = move;
+            }
         }
 
-        char symbol = (state.current_player == 0) ? 'X' : 'O';
-
         state.board[move] = symbol;
+
+        if (num_records < BOARD_CELLS) {
+            num_records++;
+        }
 
         display_board(&state);
 
@@ -73,6 +149,8 @@ static void play_game(NeuralNetwork *nn) {
     } else {
         printf("Tie game!\n");
     }
+
+    append_game_log(records, num_records, winner);
 }
 
 int main(int argc, char **argv) {
@@ -86,7 +164,7 @@ int main(int argc, char **argv) {
 
     if (!load_neural_network(&nn, model_file)) {
         printf("Could not load model. Please train first:\n");
-        printf("  ./train 200\n");
+        printf("  ./train 5000\n");
         return 1;
     }
 
