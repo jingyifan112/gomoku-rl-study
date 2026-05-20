@@ -198,51 +198,8 @@ static int get_random_move(GameState *state) {
 }
 
 
-static int is_winning_move(GameState *state, int move, char symbol) {
-    if (move < 0 || move >= BOARD_CELLS || state->board[move] != '.') {
-        return 0;
-    }
-
-    state->board[move] = symbol;
-
-    char winner = 0;
-    int over = check_game_over(state, &winner);
-
-    state->board[move] = '.';
-
-    return over && winner == symbol;
-}
-
-static int find_immediate_winning_move(GameState *state, char symbol) {
-    for (int i = 0; i < BOARD_CELLS; i++) {
-        if (state->board[i] == '.' && is_winning_move(state, i, symbol)) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 /* Get the best legal move from the neural network output. */
 static int get_computer_move(GameState *state, NeuralNetwork *nn, int display_prob) {
-    int winning_move = find_immediate_winning_move(state, 'O');
-
-    if (winning_move >= 0) {
-        if (display_prob) {
-            printf("Tactical move: O can win at position %d\n", winning_move);
-        }
-        return winning_move;
-    }
-
-    int blocking_move = find_immediate_winning_move(state, 'X');
-
-    if (blocking_move >= 0) {
-        if (display_prob) {
-            printf("Tactical move: blocking X at position %d\n", blocking_move);
-        }
-        return blocking_move;
-    }
-
     float inputs[NN_INPUT_SIZE];
 
     board_to_inputs(state, inputs);
