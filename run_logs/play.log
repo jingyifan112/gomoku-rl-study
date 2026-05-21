@@ -1,5 +1,12 @@
 Interactive play mode was tested with ./play.
 
-The program loaded gomoku_nn.bin successfully, displayed the 15x15 board, accepted human input at position 112, and the computer responded with a neural-network-selected move at position 125 with probability 99.31%.
+Final selected experiment model: gomoku_pipeline_e10.bin, copied locally to gomoku_nn.bin for interactive testing.
 
-This version uses pure neural network move selection: it chooses the legal board position with the highest output probability.
+Compared with the original random-training model, this version is more interactive and has stronger tactical benchmark performance. It can sometimes respond near human line-building threats.
+
+However, manual play is still not reliable. In human-vs-model games, the model can still miss obvious horizontal or vertical threats and allow the human player to win directly.
+
+Final observation:
+- Automatic tactical benchmark improved.
+- Manual play did not consistently improve enough.
+- The current MLP-based model can learn some tactical correlations, but it still does not reliably understand 15x15 Gomoku spatial patterns.

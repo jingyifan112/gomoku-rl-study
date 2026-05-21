@@ -225,6 +225,21 @@ int main(int argc, char **argv) {
 
     init_neural_network(&nn);
 
+    const char *initial_model_file = NULL;
+
+    if (argc > 7) {
+        initial_model_file = argv[7];
+    }
+
+    if (initial_model_file != NULL) {
+        printf("Loading initial model from %s\n", initial_model_file);
+
+        if (!load_neural_network(&nn, initial_model_file)) {
+            printf("Could not load initial model: %s\n", initial_model_file);
+            return 1;
+        }
+    }
+
     printf("Training neural network with %d games\n", random_games);
 
     if (random_games > 0) {
