@@ -1,0 +1,6 @@
+Neural network loaded from gomoku_stronger_humanplay.bin
+Fine-tuning from CSV: ../run_logs/tactical_pipeline_train.csv for 5 epochs
+Epoch 1/5, updates: 20000
+Epoch 5/5, updates: 20000
+Fine-tuning complete. Total updates: 100000
+Neural network saved to gomoku_pipeline_e5.bin

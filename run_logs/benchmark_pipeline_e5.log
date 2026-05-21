@@ -1,0 +1,8 @@
+Neural network loaded from gomoku_pipeline_e5.bin
+Running tactical benchmark on model: gomoku_pipeline_e5.bin
+Samples per case: 1000
+block_four accuracy: 824/1000 = 82.40%
+win_four accuracy: 797/1000 = 79.70%
+block_broken_four accuracy: 1000/1000 = 100.00%
+block_open_three accuracy: 978/1000 = 97.80%
+followup_block accuracy: 646/1000 = 64.60%

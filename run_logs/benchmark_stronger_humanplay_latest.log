@@ -1,0 +1,8 @@
+Neural network loaded from gomoku_stronger_humanplay.bin
+Running tactical benchmark on model: gomoku_stronger_humanplay.bin
+Samples per case: 1000
+block_four accuracy: 809/1000 = 80.90%
+win_four accuracy: 801/1000 = 80.10%
+block_broken_four accuracy: 982/1000 = 98.20%
+block_open_three accuracy: 761/1000 = 76.10%
+followup_block accuracy: 566/1000 = 56.60%

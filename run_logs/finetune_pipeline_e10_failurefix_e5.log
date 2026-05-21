@@ -1,0 +1,6 @@
+Neural network loaded from gomoku_pipeline_e10.bin
+Fine-tuning from CSV: ../run_logs/human_failures_threat_only.csv for 5 epochs
+Epoch 1/5, updates: 132
+Epoch 5/5, updates: 132
+Fine-tuning complete. Total updates: 660
+Neural network saved to gomoku_pipeline_e10_failurefix_e5.bin
