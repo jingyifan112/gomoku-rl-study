@@ -1,0 +1,8 @@
+Neural network loaded from gomoku_stronger_clean_finetune_e30.bin
+Running tactical benchmark on model: gomoku_stronger_clean_finetune_e30.bin
+Samples per case: 1000
+block_four accuracy: 803/1000 = 80.30%
+win_four accuracy: 815/1000 = 81.50%
+block_broken_four accuracy: 998/1000 = 99.80%
+block_open_three accuracy: 908/1000 = 90.80%
+followup_block accuracy: 643/1000 = 64.30%

@@ -1,0 +1,11 @@
+cc train.c -o train -O3 -Wall -W -ffast-math -lm
+In file included from train.c:1:
+./common.h:246:16: warning: missing terminating '"' character [-Winvalid-pp-token]
+  246 |         printf("Best legal move probability: position %d, %.2f%%
+      |                ^
+./common.h:246:16: error: expected expression
+./common.h:247:1: warning: missing terminating '"' character [-Winvalid-pp-token]
+  247 | ",
+      | ^
+2 warnings and 1 error generated.
+make: *** [train] Error 1

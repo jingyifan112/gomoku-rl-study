@@ -1,0 +1,21 @@
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Training neural network with 1000 games
+Mode: mixed
+Mixed training: 500 random games + 500 self-play games
+Training against random player for 500 games...
+Random games: 100, Wins: 99, Losses: 1, Ties: 0
+Random games: 200, Wins: 100, Losses: 0, Ties: 0
+Random games: 300, Wins: 100, Losses: 0, Ties: 0
+Random games: 400, Wins: 98, Losses: 2, Ties: 0
+Random games: 500, Wins: 97, Losses: 3, Ties: 0
+Training with self-play for 500 games...
+Self-play games: 100, X wins: 52, O wins: 48, Ties: 0
+Self-play games: 200, X wins: 56, O wins: 44, Ties: 0
+Self-play games: 300, X wins: 59, O wins: 41, Ties: 0
+Self-play games: 400, X wins: 57, O wins: 43, Ties: 0
+Self-play games: 500, X wins: 69, O wins: 31, Ties: 0
+Final tactical fine-tuning with 300000 synthetic examples...
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Neural network saved to gomoku_h512_humanplay.bin

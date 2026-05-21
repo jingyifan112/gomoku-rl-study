@@ -1,0 +1,8 @@
+Neural network loaded from gomoku_stronger_humanplay.bin
+Fine-tuning from CSV: ../run_logs/tactical_supervised_clean.csv for 30 epochs
+Epoch 1/30, updates: 5000
+Epoch 10/30, updates: 5000
+Epoch 20/30, updates: 5000
+Epoch 30/30, updates: 5000
+Fine-tuning complete. Total updates: 150000
+Neural network saved to gomoku_stronger_clean_finetune_e30.bin

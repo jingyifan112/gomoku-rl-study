@@ -1,0 +1,27 @@
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Training neural network with 1000 games
+Mode: mixed
+Mixed training: 500 random games + 500 self-play games
+Training against random player for 500 games...
+Random games: 100, Wins: 99, Losses: 1, Ties: 0
+Random games: 200, Wins: 95, Losses: 5, Ties: 0
+Random games: 300, Wins: 98, Losses: 2, Ties: 0
+Random games: 400, Wins: 97, Losses: 3, Ties: 0
+Random games: 500, Wins: 99, Losses: 1, Ties: 0
+Training with self-play for 500 games...
+Self-play games: 100, X wins: 60, O wins: 40, Ties: 0
+Self-play games: 200, X wins: 63, O wins: 37, Ties: 0
+Self-play games: 300, X wins: 68, O wins: 32, Ties: 0
+Self-play games: 400, X wins: 64, O wins: 36, Ties: 0
+Self-play games: 500, X wins: 53, O wins: 47, Ties: 0
+Final tactical fine-tuning with 300000 synthetic examples...
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Fine-tuning from human game data: ../run_logs/human_games.csv for 30 epochs
+Human fine-tune epoch 1/30, samples used: 112
+Human fine-tune epoch 10/30, samples used: 112
+Human fine-tune epoch 20/30, samples used: 112
+Human fine-tune epoch 30/30, samples used: 112
+Human data fine-tuning complete. Total supervised updates: 3360
+Neural network saved to gomoku_human_finetuned_v2.bin

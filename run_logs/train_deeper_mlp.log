@@ -1,0 +1,46 @@
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Training neural network with 200 games
+Mode: mixed
+Mixed training: 100 random games + 100 self-play games
+Training against random player for 100 games...
+Random games: 100, Wins: 99, Losses: 1, Ties: 0
+Training with self-play for 100 games...
+Self-play games: 100, X wins: 58, O wins: 42, Ties: 0
+Final tactical fine-tuning with 300000 synthetic examples...
+Pretraining tactical patterns with 300000 synthetic examples...
+Tactical pretraining complete: attack samples=100000, defense samples=200000
+Fine-tuning from human game data: ../run_logs/human_games_augmented_single.csv for 300 epochs
+Human fine-tune epoch 1/300, samples used: 323
+Human fine-tune epoch 10/300, samples used: 323
+Human fine-tune epoch 20/300, samples used: 323
+Human fine-tune epoch 30/300, samples used: 323
+Human fine-tune epoch 40/300, samples used: 323
+Human fine-tune epoch 50/300, samples used: 323
+Human fine-tune epoch 60/300, samples used: 323
+Human fine-tune epoch 70/300, samples used: 323
+Human fine-tune epoch 80/300, samples used: 323
+Human fine-tune epoch 90/300, samples used: 323
+Human fine-tune epoch 100/300, samples used: 323
+Human fine-tune epoch 110/300, samples used: 323
+Human fine-tune epoch 120/300, samples used: 323
+Human fine-tune epoch 130/300, samples used: 323
+Human fine-tune epoch 140/300, samples used: 323
+Human fine-tune epoch 150/300, samples used: 323
+Human fine-tune epoch 160/300, samples used: 323
+Human fine-tune epoch 170/300, samples used: 323
+Human fine-tune epoch 180/300, samples used: 323
+Human fine-tune epoch 190/300, samples used: 323
+Human fine-tune epoch 200/300, samples used: 323
+Human fine-tune epoch 210/300, samples used: 323
+Human fine-tune epoch 220/300, samples used: 323
+Human fine-tune epoch 230/300, samples used: 323
+Human fine-tune epoch 240/300, samples used: 323
+Human fine-tune epoch 250/300, samples used: 323
+Human fine-tune epoch 260/300, samples used: 323
+Human fine-tune epoch 270/300, samples used: 323
+Human fine-tune epoch 280/300, samples used: 323
+Human fine-tune epoch 290/300, samples used: 323
+Human fine-tune epoch 300/300, samples used: 323
+Human data fine-tuning complete. Total supervised updates: 96900
+Neural network saved to gomoku_deeper_mlp.bin

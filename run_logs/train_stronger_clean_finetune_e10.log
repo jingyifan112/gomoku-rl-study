@@ -1,0 +1,4 @@
+Loading initial model from gomoku_stronger_humanplay.bin
+Neural network loaded from gomoku_stronger_humanplay.bin
+Training neural network with 0 games
+Neural network saved to gomoku_stronger_clean_finetune_e10.bin

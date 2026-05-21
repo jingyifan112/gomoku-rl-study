@@ -1,0 +1,8 @@
+Neural network loaded from gomoku_clean_tactical.bin
+Running tactical benchmark on model: gomoku_clean_tactical.bin
+Samples per case: 1000
+block_four accuracy: 10/1000 = 1.00%
+win_four accuracy: 2/1000 = 0.20%
+block_broken_four accuracy: 10/1000 = 1.00%
+block_open_three accuracy: 7/1000 = 0.70%
+followup_block accuracy: 3/1000 = 0.30%

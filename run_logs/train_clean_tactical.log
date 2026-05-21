@@ -1,0 +1,6 @@
+Training neural network with 200 games
+Training Gomoku neural network against 200 random games...
+Games: 100, Wins: 88, Losses: 12, Ties: 0
+Games: 200, Wins: 99, Losses: 1, Ties: 0
+Training complete!
+Neural network saved to gomoku_clean_tactical.bin

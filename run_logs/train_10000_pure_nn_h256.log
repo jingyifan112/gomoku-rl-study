@@ -1,0 +1,24 @@
+Training neural network with 10000 games
+Training Gomoku neural network against 10000 random games...
+Games: 500, Wins: 484, Losses: 16, Ties: 0
+Games: 1000, Wins: 498, Losses: 2, Ties: 0
+Games: 1500, Wins: 499, Losses: 1, Ties: 0
+Games: 2000, Wins: 500, Losses: 0, Ties: 0
+Games: 2500, Wins: 500, Losses: 0, Ties: 0
+Games: 3000, Wins: 498, Losses: 2, Ties: 0
+Games: 3500, Wins: 500, Losses: 0, Ties: 0
+Games: 4000, Wins: 499, Losses: 1, Ties: 0
+Games: 4500, Wins: 499, Losses: 1, Ties: 0
+Games: 5000, Wins: 500, Losses: 0, Ties: 0
+Games: 5500, Wins: 499, Losses: 1, Ties: 0
+Games: 6000, Wins: 500, Losses: 0, Ties: 0
+Games: 6500, Wins: 500, Losses: 0, Ties: 0
+Games: 7000, Wins: 500, Losses: 0, Ties: 0
+Games: 7500, Wins: 500, Losses: 0, Ties: 0
+Games: 8000, Wins: 500, Losses: 0, Ties: 0
+Games: 8500, Wins: 500, Losses: 0, Ties: 0
+Games: 9000, Wins: 499, Losses: 1, Ties: 0
+Games: 9500, Wins: 500, Losses: 0, Ties: 0
+Games: 10000, Wins: 500, Losses: 0, Ties: 0
+Training complete!
+Neural network saved to gomoku_nn.bin

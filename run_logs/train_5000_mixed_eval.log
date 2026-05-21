@@ -1,0 +1,20 @@
+Training neural network with 5000 games
+Mode: mixed
+Mixed training: 2500 random games + 2500 self-play games
+Training Gomoku neural network against 2500 random games...
+Games: 500, Wins: 478, Losses: 22, Ties: 0
+Games: 1000, Wins: 498, Losses: 2, Ties: 0
+Games: 1500, Wins: 498, Losses: 2, Ties: 0
+Games: 2000, Wins: 500, Losses: 0, Ties: 0
+Games: 2500, Wins: 499, Losses: 1, Ties: 0
+Training complete!
+Training Gomoku neural network with 2500 self-play games...
+Games: 500, X wins: 246, O wins: 254, Ties: 0
+Games: 1000, X wins: 243, O wins: 257, Ties: 0
+Games: 1500, X wins: 276, O wins: 224, Ties: 0
+Games: 2000, X wins: 257, O wins: 243, Ties: 0
+Games: 2500, X wins: 259, O wins: 241, Ties: 0
+Self-play training complete!
+Neural network saved to gomoku_mixed_eval.bin
+Evaluating fixed model against 1000 random games...
+Evaluation result: Wins: 985 (98.50%), Losses: 15 (1.50%), Ties: 0 (0.00%)

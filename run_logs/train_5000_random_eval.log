@@ -1,0 +1,17 @@
+Training neural network with 5000 games
+Mode: random
+Training Gomoku neural network against 5000 random games...
+Games: 500, Wins: 488, Losses: 12, Ties: 0
+Games: 1000, Wins: 497, Losses: 3, Ties: 0
+Games: 1500, Wins: 495, Losses: 5, Ties: 0
+Games: 2000, Wins: 497, Losses: 3, Ties: 0
+Games: 2500, Wins: 500, Losses: 0, Ties: 0
+Games: 3000, Wins: 497, Losses: 3, Ties: 0
+Games: 3500, Wins: 499, Losses: 1, Ties: 0
+Games: 4000, Wins: 498, Losses: 2, Ties: 0
+Games: 4500, Wins: 500, Losses: 0, Ties: 0
+Games: 5000, Wins: 499, Losses: 1, Ties: 0
+Training complete!
+Neural network saved to gomoku_random_eval.bin
+Evaluating fixed model against 1000 random games...
+Evaluation result: Wins: 999 (99.90%), Losses: 1 (0.10%), Ties: 0 (0.00%)
